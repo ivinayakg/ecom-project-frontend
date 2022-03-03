@@ -1,1 +1,1 @@
-Ecom Project (frontend with react)
+# Ecom Project Frontend (React.js)
