@@ -1,0 +1,50 @@
+.productFilter {
+  background-color: white;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 90vh;
+  border-radius: 4px;
+}
+
+.productFilter_heading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.productFilter_filterHeading {
+  font-size: 1.2rem;
+  color: rgb(var(--black));
+  margin-bottom: 7px;
+}
+
+.productFilter_clear {
+  background-color: transparent;
+  color: rgb(var(--black));
+  text-decoration: underline;
+  padding: 0rem;
+  transition: none;
+  font-size: 1rem;
+}
+
+.productFilter_filter {
+}
+
+.productFilter_priceRange {
+  display: flex;
+  justify-content: space-between;
+  gap: 3.2rem;
+}
+
+#priceRange {
+  width: 100%;
+}
+
+.productListing_options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0px;
+}
