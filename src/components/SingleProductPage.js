@@ -1,15 +1,20 @@
 import { useUserContext } from "../context & data/UserContext";
 import "./css/SingleProductPage.css";
+import { notificationHandler } from "./Notification";
 
 const SingleProductPage = ({ data }) => {
   const { dispatch } = useUserContext();
 
   const addWishlist = () => {
-    dispatch({ for: "wishlist", type: "add", payload: data.id });
+    dispatch({ for: "wishlist", type: "add", payload: data });
   };
 
   const addToCart = () => {
     dispatch({ for: "cart", payload: data, type: "add" });
+    notificationHandler({
+      type: "success",
+      content: "Succesfully Added to cart",
+    });
   };
 
   return (
@@ -20,7 +25,7 @@ const SingleProductPage = ({ data }) => {
       <div className="productPage_content">
         <div className="productPage_detail">
           <h2 className="head2">{data.name}</h2>
-          <h4 className="head4 text-fade">{data.catergory}</h4>
+          <h4 className="head4 text-fade">{data.brand}</h4>
           <div className="productPage_price mb1">
             <h2 className="head2">
               <span>Rs.</span> {data.price - (data.discount / 100) * data.price}

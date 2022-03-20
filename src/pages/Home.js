@@ -1,6 +1,8 @@
 import Card from "../components/Card";
 import Slider from "../components/Slider";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { GetData } from "../API";
 
 const Home = () => {
   const SlideShowList = [
@@ -10,13 +12,19 @@ const Home = () => {
     <img src="/assets/slider-img 4.jpg" alt="" />,
   ];
 
+  const [catergories, setCatergories] = useState([]);
+
+  useEffect(() => {
+    GetData("/categories").then((data) => setCatergories(data.categories));
+  }, []);
+
   const navigate = useNavigate();
 
-  const catergory = <p onClick={() => navigate("/shop/?search=")}>Shop</p>;
-
-  const catergoryCardProps = {
+  const brandCardProps = {
     classname: "catergory",
-    data: { title: catergory },
+    data: {
+      title: <p onClick={() => navigate("/shop/filterbyBrand=none")}>Shop</p>,
+    },
     gradient: true,
     noButtons: true,
     type: "text-over",
@@ -40,10 +48,25 @@ const Home = () => {
           <Card {...collectionCardProps} />
         </div>
         <div className="container flex-wrap gap mt3">
-          <Card {...catergoryCardProps} />
-          <Card {...catergoryCardProps} />
-          <Card {...catergoryCardProps} />
-          <Card {...catergoryCardProps} />
+          {catergories.map((entry) => {
+            return (
+              <Card
+                key={entry.id}
+                {...brandCardProps}
+                data={{
+                  title: (
+                    <p
+                      onClick={() =>
+                        navigate(`/shop/filterbyBrand=${entry.categoryName}`)
+                      }
+                    >
+                      {entry.categoryName}
+                    </p>
+                  ),
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </>

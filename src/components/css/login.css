@@ -22,9 +22,8 @@
   width: 100%;
 }
 
-input {
-  width: max-content;
-  max-width: 100%;
+.input input {
+  width: 100%;
   border: none;
 }
 

@@ -1,38 +1,51 @@
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context & data/UserContext";
 import "./css/CartTotal.css";
 
 const CartTotal = ({ total, discount, amount }) => {
+  const navigate = useNavigate();
+  const { state } = useUserContext();
+
+  const clickHandler = () => {
+    if (!state.userData.isAuth || state.userData.token.length < 25) {
+      navigate("/login");
+    } else navigate("/checkout");
+  };
+
   return (
-    <div class="cart_total">
-      <div class="cart_totalHeading">
-        <h3 class="head3">Price Summary -</h3>
+    <div className="cart_total">
+      <div className="cart_totalHeading">
+        <h3 className="head3">Price Summary -</h3>
       </div>
-      <div class="cart_totalDetails">
-        <div class="cart_priceDetail">
-          <p class="text4">Price</p>
-          <p class="text4">Rs. {total}</p>
+      <div className="cart_totalDetails">
+        <div className="cart_priceDetail">
+          <p className="text4">Price</p>
+          <p className="text4">Rs. {total}</p>
         </div>
-        <div class="cart_priceDetail">
-          <p class="text4">Dicount</p>
-          <p class="text4">Rs. {discount}</p>
+        <div className="cart_priceDetail">
+          <p className="text4">Dicount</p>
+          <p className="text4">Rs. {discount}</p>
         </div>
-        {/* <div class="cart_priceDetail">
-          <p class="text4">Delivery Charges</p>
-          <p class="text4">Rs. 500</p>
+        {/* <div className="cart_priceDetail">
+          <p className="text4">Delivery Charges</p>
+          <p className="text4">Rs. 500</p>
         </div> */}
       </div>
       {total > 0 ? (
         <>
-          <div class="cart_totalAmount">
-            <h3 class="head3">Total Amount</h3>
-            <h4 class="head4">Rs. {amount}</h4>
+          <div className="cart_totalAmount">
+            <h3 className="head3">Total Amount</h3>
+            <h4 className="head4">Rs. {amount}</h4>
           </div>
-          <div class="cart_totalAction">
+          <div className="cart_totalAction">
             <p>You have made a total saving of Rs. {discount}</p>
-            <button class="btn-sec">Place Order</button>
+            <button className="btn-sec" onClick={clickHandler}>
+              Place Order
+            </button>
           </div>
         </>
       ) : (
-        <h3 class="head3">Your Cart Is Empty</h3>
+        <h3 className="head3">Your Cart Is Empty</h3>
       )}
     </div>
   );

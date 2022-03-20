@@ -5,6 +5,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+@media (max-width: 768px) {
+  * {
+    overflow-x: hidden;
+  }
+}
+
+.card_imggradient {
+  overflow-y: hidden;
+}
 .text-fade {
   color: rgba(var(--gray-light), 0.8);
   font-size: 1.2rem;
@@ -39,6 +48,18 @@ html {
   flex-direction: column;
 }
 
+.btn.user_icon {
+  background-color: transparent;
+
+  border: none;
+}
+
+.btn.user_icon svg {
+  color: rgba(var(--black), 0.9);
+  width: 2rem;
+  object-fit: contain;
+}
+
 /* for homePage */
 .hero {
   /* margin-top: var(--header-height); */
@@ -64,6 +85,7 @@ html {
   width: max-content;
   grid-template-areas: "overflow";
   height: 175px;
+  overflow: hidden;
 }
 
 .catergory .card_imggradient {
@@ -84,19 +106,26 @@ html {
 .productsPage .container {
   align-items: start;
   width: 100%;
-  position: relative;
   gap: 1rem;
+  position: relative;
 }
 
 .productsPage .productFilter {
   width: 22.5%;
   margin-top: 1rem;
+  height: max-content;
 }
 
 .productsContainer {
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .productsPage .container {
+    flex-direction: row;
+  }
 }
 
 /* for wishlist Page */
@@ -151,4 +180,37 @@ html {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+
+/* checkout Page */
+.checkout .container {
+  flex-direction: column;
+  width: 90%;
+  gap: 1rem;
+}
+
+.checkout h2.heading {
+  width: 100%;
+  padding: 1.2rem;
+  background-color: white;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.navigateButtonsCheckout {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  justify-content: flex-end;
+}
+.navigateButtonsCheckout button {
+  background-color: rgba(var(--black), 0.9);
+  border: 1px solid rgba(var(--black), 0.9);
+  transition: ease 300ms;
+}
+
+.navigateButtonsCheckout button:hover {
+  background-color: white;
+  color: rgba(var(--black), 0.9);
 }

@@ -1,31 +1,78 @@
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "../components/css/login.css";
+import { notificationHandler } from "../components/Notification";
+import { useUserContext } from "../context & data/UserContext";
 
 const LoginPage = () => {
   const [action, setAction] = useState("login");
+  const navigate = useNavigate();
+  const { dispatch } = useUserContext();
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("isAuth") &&
+      localStorage.getItem("isAuth") !== "false" &&
+      localStorage.getItem("token").length > 25
+    )
+      navigate(-1);
+  }, [navigate]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    let data = {};
+    for (let x of formData) {
+      data[x[0]] = x[1];
+    }
+    axios
+      .post("/api/auth/login", data)
+      .then((res) => {
+        localStorage.setItem("isAuth", true);
+        localStorage.setItem("token", res.data.encodedToken);
+        notificationHandler({
+          type: "success",
+          content: "Successfully Logged In",
+        });
+        setTimeout(() => {
+          dispatch({ for: "userData", type: "update" });
+          navigate("/");
+        }, 2000);
+      })
+      .catch((err) => {
+        notificationHandler({
+          type: "warning",
+          content: "Login/ Password Incorrect",
+        });
+        console.error(err);
+      });
+  };
+
   return (
     <div className="section loginPage">
       <div className="container">
         {action === "login" ? (
-          <div class="login_comp flex flex-col p2">
-            <h2 class="head2">Login</h2>
-            <form class="login_form flex flex-col">
-              <label for="username">Uername</label>
-              <div class="input">
-                <input type="text" id="username" required />
+          <div className="login_comp flex flex-col p2">
+            <h2 className="head2">Login</h2>
+            <form className="login_form flex flex-col" onSubmit={submitHandler}>
+              <label htmlFor="username">Uername</label>
+              <div className="input">
+                <input type="text" id="username" name="email" required />
               </div>
-              <label for="password">Password</label>
-              <div class="input">
-                <input type="password" id="password" required />
+              <label htmlFor="password">Password</label>
+              <div className="input">
+                <input type="password" id="password" name="password" required />
               </div>
-              <label class="checkbox">
+              <label className="checkbox">
                 <input type="checkbox" />
                 Remember Me
               </label>
-              <button class="btn-sec" type="submit">
+              <button className="btn-sec" type="submit">
                 Login
               </button>
-              <button onClick={() => setAction("signup")}>
+              <button type="button" onClick={() => setAction("signup")}>
                 Create An Account {">"}
               </button>
             </form>
@@ -39,27 +86,61 @@ const LoginPage = () => {
 };
 
 const SignUp = ({ setAction }) => {
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    let data = {};
+    for (let x of formData) {
+      data[x[0]] = x[1];
+    }
+    axios
+      .post("/api/auth/signup", data)
+      .then((res) => {
+        notificationHandler({
+          type: "success",
+          content: "Successfully Signed Up",
+        });
+        setTimeout(() => {
+          setAction();
+        }, 2000);
+      })
+      .catch((err) => {
+        notificationHandler({
+          type: "warning",
+          content: "Server Error Try Again Later",
+        });
+        console.error(err);
+      });
+  };
+
   return (
-    <div class="signup_comp flex flex-col p2">
-      <h2 class="head2">Sign Up</h2>
-      <form class="signup_form flex flex-col">
-        <label for="email">Email</label>
-        <div class="input">
-          <input type="email" id="email" required />
+    <div className="signup_comp flex flex-col p2">
+      <h2 className="head2">Sign Up</h2>
+      <form onSubmit={submitHandler} className="signup_form flex flex-col">
+        <label htmlFor="full_name">Full Name</label>
+        <div className="input">
+          <input type="full_name" id="full_name" required name="full_name" />
         </div>
-        <label for="password">Password</label>
-        <div class="input">
-          <input type="password" id="password" required />
+        <label htmlFor="email">Email</label>
+        <div className="input">
+          <input type="email" id="email" required name="email" />
+        </div>
+        <label htmlFor="password">Password</label>
+        <div className="input">
+          <input type="password" id="password" name="password" required />
         </div>
 
-        <label class="checkbox">
-          <input type="checkbox" />I accept all the terms &nspb; conditions
+        <label className="checkbox">
+          <input type="checkbox" name="terms" />I accept all the terms &nspb;
+          conditions
         </label>
 
-        <button class="btn-sec" type="submit">
+        <button className="btn-sec" type="submit">
           Create An Account
         </button>
-        <button onClick={setAction}>Already Have An Account {">"}</button>
+        <button onClick={setAction} type="button">
+          Already Have An Account {">"}
+        </button>
       </form>
     </div>
   );

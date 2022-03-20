@@ -48,3 +48,34 @@
   align-items: flex-start;
   gap: 0px;
 }
+
+.Filterresponsive {
+  width: 100%;
+  left: 0px;
+  bottom: -10px;
+  padding: 0.6rem;
+  border-radius: 8px;
+  flex-direction: column;
+  position: fixed;
+}
+
+.Filterresponsive .btn {
+  background-color: white;
+  color: rgb(var(--black));
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+}
+
+.productFilter.productFilter--responsive {
+  width: 100%;
+  min-height: max-content;
+  overflow: scroll;
+  max-height: 90vh;
+}
+
+.productFilter.productFilter--responsive .productFilter_filter {
+  overflow: hidden;
+  min-height: max-content;
+}

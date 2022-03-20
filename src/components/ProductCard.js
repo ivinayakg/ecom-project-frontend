@@ -1,14 +1,22 @@
 import { useUserContext } from "../context & data/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./css/ProductCard.css";
+import { notificationHandler } from "./Notification";
 
-const ProductCard = ({ data, type, clickHandler }) => {
-  const { dispatch } = useUserContext();
+const ProductCard = ({ data, type, clickHandler, button }) => {
+  const { dispatch, state } = useUserContext();
   const navigate = useNavigate();
+  const inCart = state.cart.data.find((entry) => entry.id === data.id);
 
   const addToCart = () => {
-    dispatch({ for: "cart", payload: data, type: "add" });
-    if (clickHandler) clickHandler();
+    if (!inCart) {
+      dispatch({ for: "cart", payload: data, type: "add" });
+      if (clickHandler) clickHandler();
+      notificationHandler({
+        type: "success",
+        content: "Succesfully Added to cart",
+      });
+    } else navigate("/cart");
   };
 
   const redirectToProductPage = () => {
@@ -23,7 +31,7 @@ const ProductCard = ({ data, type, clickHandler }) => {
         <div
           className="productListing_wishlistIcon"
           onClick={() =>
-            dispatch({ for: "wishlist", type: "add", payload: data.id })
+            dispatch({ for: "wishlist", type: "add", payload: data })
           }
         >
           <i className={`${data.wishlist ? "fas" : "far"} fa-heart`}></i>
@@ -42,8 +50,13 @@ const ProductCard = ({ data, type, clickHandler }) => {
         className={`productListing_action ${data.wishlist && "forWishlist"}`}
         onClick={addToCart}
       >
-        {data.wishlist ? "Move To Cart" : "Add To Cart"}
+        {!inCart
+          ? data.wishlist
+            ? "Move To Cart"
+            : "Add To Cart"
+          : "Go To Cart"}
       </button>
+      {button && button}
     </div>
   );
 };

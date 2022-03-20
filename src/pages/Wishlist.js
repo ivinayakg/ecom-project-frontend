@@ -1,15 +1,12 @@
 import { useUserContext } from "../context & data/UserContext";
-import { data1 as producsData } from "../context & data/products";
 import ProductCard from "../components/ProductCard";
 
 const Wishlist = () => {
   const { state, dispatch } = useUserContext();
-  const wishlist = producsData.filter((entry) =>
-    state.wishlist.includes(entry.id)
-  );
+  const wishlist = state.wishlist;
 
-  const ProductClickHandler = (id) => {
-    dispatch({ for: "wishlist", type: "remove", payload: id });
+  const ProductClickHandler = (data) => {
+    dispatch({ for: "wishlist", type: "remove", payload: data });
   };
 
   return (
@@ -22,7 +19,15 @@ const Wishlist = () => {
               <ProductCard
                 data={{ ...entry, wishlist: true }}
                 key={entry.id}
-                clickHandler={() => ProductClickHandler(entry.id)}
+                clickHandler={() => ProductClickHandler(entry)}
+                button={
+                  <button
+                    className="productListing_action"
+                    onClick={() => ProductClickHandler(entry)}
+                  >
+                    Remove
+                  </button>
+                }
               />
             );
           })}

@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useReducer } from "react";
+import { useState } from "react";
 import "./css/ProductFilter.css";
 
-const ProductFilter = ({ setFilter, className }) => {
+const ProductFilter = ({ setFilter, className, buttonFun, data }) => {
   const [state, dispatch] = useReducer(FilterReducer, {
     sort: null,
     onlyInStock: false,
     onlyFastDelivery: false,
     priceRange: 0,
-    catergory: [],
+    brand: [],
+    rating: 0,
   });
+  const brands = data.brands;
 
   useEffect(() => {
     setFilter(state);
@@ -20,7 +23,10 @@ const ProductFilter = ({ setFilter, className }) => {
         <h4>Filter</h4>
         <button
           className="productFilter_clear"
-          onClick={() => dispatch({ type: "reset" })}
+          onClick={() => {
+            dispatch({ type: "reset" });
+            if (buttonFun) buttonFun();
+          }}
         >
           Clear
         </button>
@@ -67,25 +73,58 @@ const ProductFilter = ({ setFilter, className }) => {
           </label>
         </div>
       </div>
+
       <div className="productFilter_filter">
-        <h4 className="productFilter_filterHeading">Filter By Catergory</h4>
+        <h4 className="productFilter_filterHeading">Filter By Brand</h4>
         <div className="productListing_options">
-          {["H&M", "AJIO", "Reebok", "Bewakoof", "None"].map((entry, index) => {
+          {brands.map((entry, index) => {
             return (
               <label key={index}>
                 {entry}
                 <input
                   type="checkbox"
-                  onChange={() =>
-                    dispatch({ type: "catergory", payload: entry })
-                  }
-                  checked={state.catergory.includes(entry)}
+                  onChange={() => dispatch({ type: "brand", payload: entry })}
+                  checked={state.brand.includes(entry)}
                 />
               </label>
             );
           })}{" "}
+          <label>
+            None
+            <input
+              type="checkbox"
+              onChange={() => dispatch({ type: "brand", payload: "None" })}
+              checked={state.brand.includes("None")}
+            />
+          </label>
         </div>
       </div>
+      <div className="productFilter_filter">
+        <h4 className="productFilter_filterHeading">Filter By Rating</h4>
+        <div className="productListing_options">
+          {[1, 2, 3, 4].map((entry, index) => {
+            return (
+              <label key={index}>
+                {entry}+ Star
+                <input
+                  type="checkbox"
+                  onChange={() => dispatch({ type: "rating", payload: entry })}
+                  checked={state.rating === entry}
+                />
+              </label>
+            );
+          })}{" "}
+          <label>
+            None
+            <input
+              type="checkbox"
+              onChange={() => dispatch({ type: "rating", payload: 0 })}
+              checked={state.brand === 0}
+            />
+          </label>
+        </div>
+      </div>
+
       <div className="productFilter_filter">
         <h4 className="productFilter_filterHeading">Filter Further</h4>
         <div className="productListing_options">
@@ -121,7 +160,44 @@ const ProductFilter = ({ setFilter, className }) => {
   );
 };
 
+const ProductFilterResponsive = (Component) => {
+  /*
+  this is what we call a higher order component (HOC) basically its wrapping
+  the componenet which im passign it into a another component which will extend its functionality
+  */
+  const OutputComponent = (props) => {
+    const [mobile, setMobile] = useState(false);
+    const [show, setShow] = useState(false);
+
+    useEffect(() => {
+      if (window.screen.width <= 768) setMobile(true);
+      else setMobile(false);
+    }, [window.screen.width]);
+
+    return mobile ? (
+      <>
+        <div className="Filterresponsive">
+          {show && (
+            <Component {...props} className="productFilter--responsive" />
+          )}
+          <button className="btn" onClick={() => setShow((prev) => !prev)}>
+            Filter
+          </button>
+        </div>
+      </>
+    ) : (
+      <Component {...props} />
+    );
+  };
+
+  return OutputComponent;
+};
+
 export const useCustomFilter = (data, state) => {
+  //useing this useMemo hook im adding a very particular functionality
+  //basically the function within will be called once and the value will be returned
+  // and will not be called again until and unless the value of the variable in the second arguement changes
+  //that way it will save heavy computation energy
   const sortedArray = useMemo(
     () =>
       [...data].sort((first, second) =>
@@ -140,14 +216,17 @@ export const useCustomFilter = (data, state) => {
   const rangeFiltered = filteredArray.filter(
     (entry) => entry.price > state.priceRange * 10
   );
-
-  const catergoryFilter = rangeFiltered.filter((entry) =>
-    state.catergory.length > 0 && !state.catergory.includes("None")
-      ? state.catergory.includes(entry.catergory)
+  const brandFilter = rangeFiltered.filter((entry) =>
+    state.brand.length > 0 && !state.brand.includes("None")
+      ? state.brand.includes(entry.brand)
       : true
   );
 
-  return catergoryFilter;
+  const ratingFilter = brandFilter.filter(
+    (entry) => entry.ratings >= state.rating
+  );
+
+  return ratingFilter;
 };
 
 const FilterReducer = (state, action) => {
@@ -162,20 +241,19 @@ const FilterReducer = (state, action) => {
       return { ...state, priceRange: action.payload };
     case "resetstockndelivery":
       return { ...state, onlyInStock: false, onlyFastDelivery: false };
-    case "catergory":
-      if (
-        action.payload === "None" &&
-        !state.catergory.includes(action.payload)
-      ) {
-        return { ...state, catergory: ["None"] };
-      } else if (state.catergory.includes(action.payload)) {
-        let catergories = state.catergory.filter(
+    case "rating":
+      return { ...state, rating: action.payload };
+    case "brand":
+      if (action.payload === "None" && !state.brand.includes(action.payload)) {
+        return { ...state, brand: ["None"] };
+      } else if (state.brand.includes(action.payload)) {
+        let brands = state.brand.filter(
           (entry) => entry !== action.payload && entry !== "None"
         );
-        return { ...state, catergory: catergories };
+        return { ...state, brand: brands };
       } else {
-        let catergories = [...state.catergory, action.payload];
-        return { ...state, catergory: catergories };
+        let brands = [...state.brand, action.payload];
+        return { ...state, brand: brands };
       }
     case "reset":
       return {
@@ -183,11 +261,11 @@ const FilterReducer = (state, action) => {
         onlyInStock: false,
         onlyFastDelivery: false,
         priceRange: 0,
-        catergory: ["None"],
+        brand: ["None"],
       };
     default:
       return state;
   }
 };
 
-export default ProductFilter;
+export default ProductFilterResponsive(ProductFilter);

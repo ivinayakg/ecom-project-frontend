@@ -36,10 +36,13 @@ const Header = ({ links, brand, searchHandler }) => {
           type="text"
           placeholder="search"
           className="header_searchBar"
-          onChange={(e) => searchHandler(e.target.value)}
+          onChange={(e) => setSearchText(e.target.value)}
         />
 
-        <button className="header_searchBtn">
+        <button
+          className="header_searchBtn"
+          onClick={() => searchHandler(searchText)}
+        >
           <i className="fas fa-search"></i>
         </button>
       </div>

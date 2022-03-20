@@ -1,17 +1,23 @@
 import SingleProductPage from "../components/SingleProductPage";
-import { data1 as prodsData } from "../context & data/products";
+import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { GetData } from "../API";
 
 const SingleProduct = () => {
-  const data = window.history.state
-    ? window.history.state
-    : prodsData.find(
-        (entry) => entry.id === window.location.pathname.split("/")[3]
-      );
+  const { state } = useLocation();
+  const { productId } = useParams();
+  const [data, setData] = useState(state);
+
+  useEffect(() => {
+    if (!state || state?.id !== productId) {
+      GetData(`/products/${productId}`).then((data) => setData(data.product));
+    }
+  }, [productId, state]);
 
   return (
     <div className="section">
       <div className="container">
-        <SingleProductPage data={data} />
+        {data && <SingleProductPage data={data} />}
       </div>
     </div>
   );

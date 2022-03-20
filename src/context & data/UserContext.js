@@ -1,27 +1,32 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { CartReducer } from "./CartReducer";
-import { WishListReducer } from "./WishListReduce";
+import { notificationHandler } from "../components/Notification";
+import { addressReducer } from "./AddressReducer";
+import { CartReducer, getDataCart } from "./CartReducer";
+import { getDataWishlist, WishListReducer } from "./WishListReduce";
 
 const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(GlobalReducer, {
     cart: {
-      data: JSON.parse(localStorage.getItem("cartData")) ?? [],
+      data: [],
       totalQauntity: 0,
     },
-    wishlist: JSON.parse(localStorage.getItem("wishlistData")) ?? [],
-    userData: { isAuth: false },
+    wishlist: [],
+    userData: {
+      isAuth: false,
+      token: "",
+      address: [],
+    },
   });
 
   useEffect(() => {
-    localStorage.setItem("cartData", JSON.stringify(state.cart.data));
-    dispatch({ for: "cart", type: "updateCart" });
-  }, [state.cart.data]);
+    dispatch({ for: "userData", type: "update" });
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("wishlistData", JSON.stringify(state.wishlist));
-  }, [state.wishlist]);
+    UpdateData(state.userData.token, dispatch);
+  }, [state.userData]);
 
   return (
     <UserContext.Provider value={{ state, dispatch }}>
@@ -30,21 +35,84 @@ export const UserContextProvider = ({ children }) => {
   );
 };
 
+export const UpdateData = (token, dispatch) => {
+  if (token.length > 25) {
+    getDataCart(dispatch);
+    getDataWishlist(dispatch);
+  } else dispatch({ for: "cart", type: "local" });
+};
+
 export const useUserContext = () => useContext(UserContext);
 
 const GlobalReducer = (state, action) => {
   switch (action.for) {
-    case "cart":
+    case "address":
       return {
         ...state,
-        cart: CartReducer(state.cart, action),
+        userData: {
+          ...state.userData,
+          address: addressReducer(state.userData.address, action),
+        },
+      };
+
+    case "cart":
+      const cartData = CartReducer(state.cart, action);
+      if (!state.userData.isAuth || state.userData.isAuth === "false") {
+        if (state.cart.data.length >= 0) {
+          localStorage.setItem("cartData", JSON.stringify(cartData.data));
+        }
+      }
+      return {
+        ...state,
+        cart: cartData,
       };
     case "wishlist":
+      if (
+        !localStorage.getItem("isAuth") ||
+        localStorage.getItem("isAuth") === "false" ||
+        localStorage.getItem("token").length < 25
+      ) {
+        notificationHandler({ type: "warning", content: "Login First..." });
+        return state;
+      }
       let data = WishListReducer(state.wishlist, action);
       return {
         ...state,
         wishlist: data,
       };
+    case "userData":
+      switch (action.type) {
+        case "update":
+          return {
+            ...state,
+            userData: {
+              ...state.userData,
+              isAuth:
+                localStorage.getItem("isAuth") &&
+                localStorage.getItem("isAuth") !== "false" &&
+                localStorage.getItem("token").length > 25
+                  ? true
+                  : false,
+              token: localStorage.getItem("token") ?? "",
+            },
+          };
+        case "reset":
+          return {
+            cart: {
+              data: [],
+              totalQauntity: 0,
+            },
+            wishlist: [],
+            userData: {
+              isAuth: false,
+              token: "",
+              address: [],
+            },
+          };
+        default:
+          return state;
+      }
+
     default:
       return state;
   }

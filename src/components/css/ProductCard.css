@@ -41,6 +41,7 @@
   padding: 10px;
   background-color: rgba(var(--gray-light), 0.6);
   border-radius: 0px 0px 4px 4px;
+  cursor: pointer;
 }
 
 .productListing_action:hover {
