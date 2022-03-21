@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
+import { CartReducer, getDataCart } from "./CartReducer";
 
 const UserContext = createContext();
 
@@ -20,6 +21,10 @@ export const UserContextProvider = ({ children }) => {
     dispatch({ for: "userData", type: "update" });
   }, []);
 
+  useEffect(() => {
+    UpdateData(state.userData.token, dispatch);
+  }, [state.userData]);
+
   return (
     <UserContext.Provider value={{ state, dispatch }}>
       {children}
@@ -27,10 +32,30 @@ export const UserContextProvider = ({ children }) => {
   );
 };
 
+export const UpdateData = (token, dispatch) => {
+  if (token.length > 25) {
+    getDataCart(dispatch);
+  } else dispatch({ for: "cart", type: "local" }); //again only called when the user is not logged in
+};
+
 export const useUserContext = () => useContext(UserContext);
 
 const GlobalReducer = (state, action) => {
   switch (action.for) {
+    case "cart":
+      const cartData = CartReducer(state.cart, action);
+
+      /*To Make Sure that if the user is not logged in the data is stored in the localstorage */
+      if (!state.userData.isAuth || state.userData.isAuth === "false") {
+        if (state.cart.data.length >= 0) {
+          localStorage.setItem("cartData", JSON.stringify(cartData.data));
+        }
+      }
+
+      return {
+        ...state,
+        cart: cartData,
+      };
     case "userData":
       switch (action.type) {
         case "update":
