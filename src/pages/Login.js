@@ -27,9 +27,10 @@ const LoginPage = () => {
     for (let x of formData) {
       data[x[0]] = x[1];
     }
-    axios
-      .post("/api/auth/login", data)
-      .then((res) => {
+
+    (async () => {
+      try {
+        const res = axios.post("/api/auth/login", data);
         localStorage.setItem("isAuth", true);
         localStorage.setItem("token", res.data.encodedToken);
         notificationHandler({
@@ -40,14 +41,14 @@ const LoginPage = () => {
           dispatch({ for: "userData", type: "update" });
           navigate("/");
         }, 2000);
-      })
-      .catch((err) => {
+      } catch (error) {
         notificationHandler({
           type: "warning",
           content: "Login/ Password Incorrect",
         });
-        console.error(err);
-      });
+        console.error(error);
+      }
+    })();
   };
 
   return (
@@ -93,9 +94,10 @@ const SignUp = ({ setAction }) => {
     for (let x of formData) {
       data[x[0]] = x[1];
     }
-    axios
-      .post("/api/auth/signup", data)
-      .then((res) => {
+
+    (async () => {
+      try {
+        const res = await axios.post("/api/auth/signup", data);
         notificationHandler({
           type: "success",
           content: "Successfully Signed Up",
@@ -103,14 +105,14 @@ const SignUp = ({ setAction }) => {
         setTimeout(() => {
           setAction();
         }, 2000);
-      })
-      .catch((err) => {
+      } catch (error) {
         notificationHandler({
           type: "warning",
           content: "Server Error Try Again Later",
         });
-        console.error(err);
-      });
+        console.error(error);
+      }
+    })();
   };
 
   return (
