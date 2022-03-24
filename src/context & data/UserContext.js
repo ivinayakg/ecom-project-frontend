@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
+import { notificationHandler } from "../components/Notification";
 import { CartReducer, getDataCart } from "./CartReducer";
+import { getDataWishlist, WishListReducer } from "./WishListReduce";
 
 const UserContext = createContext();
 
@@ -35,6 +37,7 @@ export const UserContextProvider = ({ children }) => {
 export const UpdateData = (token, dispatch) => {
   if (token.length > 25) {
     getDataCart(dispatch);
+    getDataWishlist(dispatch);
   } else dispatch({ for: "cart", type: "local" }); //again only called when the user is not logged in
 };
 
@@ -56,6 +59,21 @@ const GlobalReducer = (state, action) => {
         ...state,
         cart: cartData,
       };
+    case "wishlist":
+      if (
+        !localStorage.getItem("isAuth") ||
+        localStorage.getItem("isAuth") === "false" ||
+        localStorage.getItem("token").length < 25
+      ) {
+        notificationHandler({ type: "warning", content: "Login First..." });
+        return state;
+      }
+      let data = WishListReducer(state.wishlist, action);
+      return {
+        ...state,
+        wishlist: data,
+      };
+
     case "userData":
       switch (action.type) {
         case "update":
