@@ -30,21 +30,28 @@ const LoginPage = () => {
 
     (async () => {
       try {
-        const res = axios.post("/api/auth/login", data);
-        localStorage.setItem("isAuth", true);
-        localStorage.setItem("token", res.data.encodedToken);
-        notificationHandler({
-          type: "success",
-          content: "Successfully Logged In",
-        });
-        setTimeout(() => {
-          dispatch({ for: "userData", type: "update" });
-          navigate("/");
-        }, 2000);
+        const res = await axios.post("/api/auth/login", data);
+        if (res.statusText === "OK") {
+          localStorage.setItem("isAuth", true);
+          localStorage.setItem("token", res.data.encodedToken);
+          notificationHandler({
+            type: "success",
+            content: "Successfully Logged In",
+          });
+          setTimeout(() => {
+            dispatch({ for: "userData", type: "update" });
+            navigate("/");
+          }, 2000);
+        } else {
+          notificationHandler({
+            type: "warning",
+            content: "Your Password/Email Id Is Wrong, Try Again",
+          });
+        }
       } catch (error) {
         notificationHandler({
           type: "warning",
-          content: "Login/ Password Incorrect",
+          content: "Server Is Not Responding, Try Again Later",
         });
         console.error(error);
       }
