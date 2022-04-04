@@ -6,6 +6,31 @@ import "../components/css/login.css";
 import { notificationHandler } from "../components/Notification";
 import { useUserContext } from "../context & data/UserContext";
 
+const LoginHandler = async (data) => {
+  try {
+    const res = await axios.post("/api/auth/login", data);
+    if (res.statusText === "OK") {
+      localStorage.setItem("isAuth", true);
+      localStorage.setItem("token", res.data.encodedToken);
+      notificationHandler({
+        type: "success",
+        content: "Successfully Logged In",
+      });
+    } else {
+      notificationHandler({
+        type: "warning",
+        content: "Your Password/Email Id Is Wrong, Try Again",
+      });
+    }
+  } catch (error) {
+    notificationHandler({
+      type: "warning",
+      content: "Server Is Not Responding, Try Again Later",
+    });
+    console.error(error);
+  }
+};
+
 const LoginPage = () => {
   const [action, setAction] = useState("login");
   const navigate = useNavigate();
@@ -28,34 +53,12 @@ const LoginPage = () => {
       data[x[0]] = x[1];
     }
 
-    (async () => {
-      try {
-        const res = await axios.post("/api/auth/login", data);
-        if (res.statusText === "OK") {
-          localStorage.setItem("isAuth", true);
-          localStorage.setItem("token", res.data.encodedToken);
-          notificationHandler({
-            type: "success",
-            content: "Successfully Logged In",
-          });
-          setTimeout(() => {
-            dispatch({ for: "userData", type: "update" });
-            navigate("/");
-          }, 2000);
-        } else {
-          notificationHandler({
-            type: "warning",
-            content: "Your Password/Email Id Is Wrong, Try Again",
-          });
-        }
-      } catch (error) {
-        notificationHandler({
-          type: "warning",
-          content: "Server Is Not Responding, Try Again Later",
-        });
-        console.error(error);
-      }
-    })();
+    LoginHandler(data).then((res) => {
+      setTimeout(() => {
+        dispatch({ for: "userData", type: "update" });
+        navigate("/");
+      }, 2000);
+    });
   };
 
   return (
@@ -81,6 +84,22 @@ const LoginPage = () => {
                 Login
               </button>
               <button type="button" onClick={() => setAction("signup")}>
+                Create An Account {">"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  LoginHandler({
+                    email: "hell@gmail.com",
+                    password: "12345678",
+                  }).then((res) => {
+                    setTimeout(() => {
+                      dispatch({ for: "userData", type: "update" });
+                      navigate("/");
+                    }, 2000);
+                  });
+                }}
+              >
                 Create An Account {">"}
               </button>
             </form>

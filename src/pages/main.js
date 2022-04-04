@@ -16,6 +16,7 @@ import SingleProduct from "./SingleProduct";
 import { NotificationParent } from "../components/Notification";
 import Checkout from "./Checkout";
 import Profile from "./Profile";
+import Page404 from "./404Page";
 
 const Main = () => {
   const Brand = (
@@ -88,6 +89,7 @@ const Main = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/product/:productId" element={<SingleProduct />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </>
   );
