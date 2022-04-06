@@ -16,6 +16,7 @@ import SingleProduct from "./SingleProduct";
 import { NotificationParent } from "../components/Notification";
 import Checkout from "./Checkout";
 import Profile from "./Profile";
+import Page404 from "./404Page";
 
 const Main = () => {
   const Brand = (
@@ -26,6 +27,7 @@ const Main = () => {
   const { state, dispatch } = useUserContext();
   const navigate = useNavigate();
 
+  //this is used by the search bar in header to search for product name
   const searchHandler = (value) => {
     navigate(`/shop/filterby=${value}`);
   };
@@ -87,6 +89,7 @@ const Main = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/product/:productId" element={<SingleProduct />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </>
   );

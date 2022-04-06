@@ -6,22 +6,31 @@ import ProductFilter, { useCustomFilter } from "../components/ProductFilter";
 import { useUserContext } from "../context & data/UserContext";
 
 const ProductPage = () => {
+  // to get the params from the url
   const { filterName, catergoryName } = useParams();
   const navigate = useNavigate();
+
+  //basic products that we got
   const [productsData, setProductsData] = useState([]);
   const { state } = useUserContext();
 
-  // this is the setup to use filter
+  // this is the setup to use filter (bear with me , this one is nice as AF)
+  // the ProductFilter componenet gets the setfilter as a prop as it handles the filter data, whenever the state of filter in
+  // the ProductFilter componenet changes it run this function and pass down the latest filter configuration.
+  //later this below filter state calls the custom hook for filtering with the present products set and returns a filtered
+  //array of products according to the filter configuration
   const [filter, setFilter] = useState({});
   const data = useCustomFilter(productsData, filter);
 
+  // this is going to check if the wishlist array in the context has the product that we got and if do then give them one more
+  // entry called wishlist and pass true
   let wishlistData = data.map((entry) => {
     if (state.wishlist?.find((wish) => wish.id === entry.id))
       return { ...entry, wishlist: true };
     else return entry;
   });
 
-  //filter data by a name
+  //filter data by a name by taking the para and checking every listing if any of them name's contain the filterName
   let filteredData = wishlistData.filter((entry) => {
     return filterName !== "none" && filterName
       ? entry.name.toLowerCase().includes(filterName)
@@ -44,6 +53,7 @@ const ProductPage = () => {
   const productFilterProps = {
     setFilter: setFilter,
     buttonFun: () => navigate("/shop/filterby=none"),
+    // this code below is to sedn the brands that the products data which is fetched has
     data: {
       brands: productsData.reduce(
         (prev, curr) =>

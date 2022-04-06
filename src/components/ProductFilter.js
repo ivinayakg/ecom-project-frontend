@@ -3,6 +3,8 @@ import { useState } from "react";
 import "./css/ProductFilter.css";
 
 const ProductFilter = ({ setFilter, className, buttonFun, data }) => {
+  //ready to get irritated as i got seeing my own code why wont you
+
   const [state, dispatch] = useReducer(FilterReducer, {
     sort: null,
     onlyInStock: false,
@@ -14,6 +16,7 @@ const ProductFilter = ({ setFilter, className, buttonFun, data }) => {
   const brands = data.brands;
 
   useEffect(() => {
+    //pass up the latest filter configuration to its parent component
     setFilter(state);
   }, [state, setFilter]);
 
@@ -165,6 +168,9 @@ const ProductFilterResponsive = (Component) => {
   this is what we call a higher order component (HOC) basically its wrapping
   the componenet which im passign it into a another component which will extend its functionality
   */
+
+  //please ignore this as this is not finished yet just think of it as a function which is going to return the component
+  // as it is which is being passed down to it
   const OutputComponent = (props) => {
     const [mobile, setMobile] = useState(false);
     const [show, setShow] = useState(false);
@@ -194,10 +200,11 @@ const ProductFilterResponsive = (Component) => {
 };
 
 export const useCustomFilter = (data, state) => {
-  //useing this useMemo hook im adding a very particular functionality
+  //using this useMemo hook im adding a very particular functionality
   //basically the function within will be called once and the value will be returned
   // and will not be called again until and unless the value of the variable in the second arguement changes
   //that way it will save heavy computation energy
+  //again something that i wanted to try you can just think of it as a simple function returning a array.
   const sortedArray = useMemo(
     () =>
       [...data].sort((first, second) =>
