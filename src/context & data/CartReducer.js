@@ -132,8 +132,6 @@ const UpdateToCartAPI = async (productId, type) => {
 export const getDataCart = async (dispatch) => {
   try {
     const localData = JSON.parse(localStorage.getItem("cartData"));
-    /*When the user logged in for the firstTime and have already products in the cart before logged in.
-    its almost like syncing the local storage with backend. */
     if (localData && localData.length >= 1) {
       localData.forEach((entry) => {
         AddToCartAPI(entry);

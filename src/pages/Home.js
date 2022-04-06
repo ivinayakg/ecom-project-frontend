@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { GetData } from "../API";
 
 const Home = () => {
-  //these are the contents of the slider
   const SlideShowList = [
     <img src="/assets/slider-img 1.jpg" alt="" />,
     <img src="/assets/slider-img 2.jpg" alt="" />,
@@ -21,10 +20,8 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  // these are the props passed down to the cards responsible for brands
-  //this object is gonna get spread and every key will be passed down to the component as a prop
   const brandCardProps = {
-    classname: "brand",
+    classname: "catergory",
     data: {
       title: <p onClick={() => navigate("/shop/filterbyBrand=none")}>Shop</p>,
     },
@@ -33,7 +30,6 @@ const Home = () => {
     type: "text-over",
   };
 
-  //same for this
   const collectionCardProps = {
     data: { title: "Product Collection", para: "View More ->" },
     type: "",
@@ -52,7 +48,6 @@ const Home = () => {
           <Card {...collectionCardProps} />
         </div>
         <div className="container flex-wrap gap mt3">
-          {/* mapping throught the brands */}
           {catergories.map((entry) => {
             return (
               <Card

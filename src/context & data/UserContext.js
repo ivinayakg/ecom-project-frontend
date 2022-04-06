@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { notificationHandler } from "../components/Notification";
+import { addressReducer } from "./AddressReducer";
 import { CartReducer, getDataCart } from "./CartReducer";
 import { getDataWishlist, WishListReducer } from "./WishListReduce";
 
@@ -38,23 +39,29 @@ export const UpdateData = (token, dispatch) => {
   if (token.length > 25) {
     getDataCart(dispatch);
     getDataWishlist(dispatch);
-  } else dispatch({ for: "cart", type: "local" }); //again only called when the user is not logged in
+  } else dispatch({ for: "cart", type: "local" });
 };
 
 export const useUserContext = () => useContext(UserContext);
 
 const GlobalReducer = (state, action) => {
   switch (action.for) {
+    case "address":
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          address: addressReducer(state.userData.address, action),
+        },
+      };
+
     case "cart":
       const cartData = CartReducer(state.cart, action);
-
-      /*To Make Sure that if the user is not logged in the data is stored in the localstorage */
       if (!state.userData.isAuth || state.userData.isAuth === "false") {
         if (state.cart.data.length >= 0) {
           localStorage.setItem("cartData", JSON.stringify(cartData.data));
         }
       }
-
       return {
         ...state,
         cart: cartData,
@@ -73,7 +80,6 @@ const GlobalReducer = (state, action) => {
         ...state,
         wishlist: data,
       };
-
     case "userData":
       switch (action.type) {
         case "update":

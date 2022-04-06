@@ -65,3 +65,15 @@ const Checkout = () => {
 };
 
 export default Checkout;
+
+// const totalCost = state.cart.data.reduce(
+//   (prev, curr) => parseInt(prev) + curr.price * curr.quantity,
+//   0
+// );
+// const totalDiscount = state.cart.data
+//   .reduce(
+//     (prev, curr) => prev + curr.price * (curr.discount / 100) * curr.quantity,
+//     0
+//   )
+//   .toFixed(0);
+// const totalAmount = totalCost - totalDiscount;
