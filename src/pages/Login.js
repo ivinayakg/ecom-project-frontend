@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "../components/css/login.css";
 import { notificationHandler } from "../components/Notification";
@@ -35,6 +35,10 @@ const LoginPage = () => {
   const [action, setAction] = useState("login");
   const navigate = useNavigate();
   const { dispatch } = useUserContext();
+  const { state } = useLocation();
+  let pathName = state?.from?.pathname ?? "/";
+
+  console.log(pathName);
 
   useEffect(() => {
     if (
@@ -56,7 +60,7 @@ const LoginPage = () => {
     LoginHandler(data).then((res) => {
       setTimeout(() => {
         dispatch({ for: "userData", type: "update" });
-        navigate("/");
+        navigate(pathName);
       }, 2000);
     });
   };
@@ -95,7 +99,7 @@ const LoginPage = () => {
                   }).then((res) => {
                     setTimeout(() => {
                       dispatch({ for: "userData", type: "update" });
-                      navigate("/");
+                      navigate(pathName);
                     }, 2000);
                   });
                 }}

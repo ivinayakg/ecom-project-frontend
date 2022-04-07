@@ -17,6 +17,7 @@ import { NotificationParent } from "../components/Notification";
 import Checkout from "./Checkout";
 import Profile from "./Profile";
 import Page404 from "./404Page";
+import { ProtectedRoutes } from "../utils/ProtectedRoutes";
 
 const Main = () => {
   const Brand = (
@@ -83,13 +84,17 @@ const Main = () => {
           />
           <Route path="/shop" element={<ProductPage />} />
         </Route>
-        <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/product/:productId" element={<SingleProduct />} />
         <Route path="*" element={<Page404 />} />
+
+        {/* protected routes below */}
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+        </Route>
       </Routes>
     </>
   );

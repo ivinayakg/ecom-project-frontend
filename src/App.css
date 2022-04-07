@@ -81,22 +81,22 @@ html {
   width: 100%;
 }
 
-.catergory {
+.brand {
   width: max-content;
   grid-template-areas: "overflow";
   height: 175px;
   overflow: hidden;
 }
 
-.catergory .card_imggradient {
+.brand .card_imggradient {
   height: 100%;
 }
 
-.catergory .card_content {
+.brand .card_content {
   display: none;
 }
 
-.catergory .card_header {
+.brand .card_header {
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
   align-self: center;
