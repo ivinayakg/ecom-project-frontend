@@ -7,9 +7,9 @@ export const CartReducer = (cartState, action) => {
   switch (type) {
     case "add":
       let data = addToCart(payload, cartState.data);
-      const addedData = data.find((entry) => entry.id === payload.id);
+      const addedData = data.find((entry) => entry._id === payload._id);
       if (addedData.quantity > 1) {
-        UpdateToCartAPI(payload.id, "increment");
+        UpdateToCartAPI(payload._id, "increment");
       } else {
         AddToCartAPI(addedData);
       }
@@ -27,9 +27,9 @@ export const CartReducer = (cartState, action) => {
         totalQauntity: data1.reduce((prev, curr) => prev + curr.quantity, 0),
       };
     case "update":
-      const data2 = updateQuantity(payload.id, payload.sign, cartState.data);
+      const data2 = updateQuantity(payload._id, payload.sign, cartState.data);
       UpdateToCartAPI(
-        payload.id,
+        payload._id,
         payload.sign === "+" ? "increment" : "decrement"
       );
       return {
@@ -55,7 +55,7 @@ export const CartReducer = (cartState, action) => {
 const addToCart = (data, state) => {
   let firstTime = true;
   let prodcs = state.map((entry) => {
-    if (entry.id === data.id) {
+    if (entry._id === data._id) {
       firstTime = false;
       return { ...entry, quantity: entry.quantity + 1 };
     } else return entry;
@@ -66,11 +66,11 @@ const addToCart = (data, state) => {
   return prodcs;
 };
 
-const deleteFromCart = (id, state) => state.filter((entry) => entry.id !== id);
+const deleteFromCart = (id, state) => state.filter((entry) => entry._id !== id);
 
 const updateQuantity = (id, sign, state) => {
   return state.map((entry) => {
-    if (entry.id === id) {
+    if (entry._id === id) {
       let newData = {
         ...entry,
         quantity: sign === "+" ? entry.quantity + 1 : entry.quantity - 1,
@@ -100,7 +100,7 @@ const AddToCartAPI = async (product) => {
 
 const DeleteToCartAPI = async (product) => {
   try {
-    const res = await DeleteData(`/user/cart/${product.id}`, {
+    const res = await DeleteData(`/user/cart/${product._id}`, {
       headers: {
         authorization: localStorage.getItem("token") ?? "",
       },

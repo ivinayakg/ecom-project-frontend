@@ -36,7 +36,7 @@ const Checkout = () => {
           <AddressChecker
             addresses={state.userData.address}
             setData={putAddress}
-            current={data.address?.id}
+            current={data.address?._id}
           />
         )}
         {step === "summary" && <CheckoutSummary cart={state.cart.data} />}

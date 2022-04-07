@@ -18,7 +18,7 @@ const Wishlist = () => {
             return (
               <ProductCard
                 data={{ ...entry, wishlist: true }}
-                key={entry.id}
+                key={entry._id}
                 clickHandler={() => ProductClickHandler(entry)}
                 button={
                   <button

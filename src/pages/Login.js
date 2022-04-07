@@ -38,8 +38,6 @@ const LoginPage = () => {
   const { state } = useLocation();
   let pathName = state?.from?.pathname ?? "/";
 
-  console.log(pathName);
-
   useEffect(() => {
     if (
       localStorage.getItem("isAuth") &&

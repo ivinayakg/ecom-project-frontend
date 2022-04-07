@@ -4,7 +4,7 @@ export const WishListReducer = (state, action) => {
   let { type, payload } = action;
   switch (type) {
     case "add":
-      if (!state.find((entry) => entry.id === payload.id)) {
+      if (!state.find((entry) => entry._id === payload._id)) {
         AddToWishlistAPI(payload);
         return [...state, payload];
       }
@@ -12,7 +12,7 @@ export const WishListReducer = (state, action) => {
     case "remove":
       DeleteToWishlistAPI(payload);
       return state.filter((entry) => {
-        return entry.id !== payload.id;
+        return entry._id !== payload._id;
       });
     case "updateApi":
       return payload;
@@ -40,7 +40,7 @@ const AddToWishlistAPI = async (product) => {
 
 const DeleteToWishlistAPI = async (product) => {
   try {
-    const res = await DeleteData(`/user/wishlist/${product.id}`, {
+    const res = await DeleteData(`/user/wishlist/${product._id}`, {
       headers: {
         authorization: localStorage.getItem("token") ?? "",
       },

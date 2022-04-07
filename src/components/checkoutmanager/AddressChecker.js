@@ -9,9 +9,9 @@ const AddressChecker = ({ addresses, setData, current }) => {
           return (
             <div
               className={`addressCheckerCard ${
-                current === entry.id && "addressCheckerCard--active"
+                current === entry._id && "addressCheckerCard--active"
               }`}
-              key={entry.id}
+              key={entry._id}
             >
               <div className="addressCheckerCard_content">
                 <h2>{entry.firstName + " " + entry.lastName}</h2>

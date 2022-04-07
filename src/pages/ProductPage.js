@@ -25,7 +25,7 @@ const ProductPage = () => {
   // this is going to check if the wishlist array in the context has the product that we got and if do then give them one more
   // entry called wishlist and pass true
   let wishlistData = data.map((entry) => {
-    if (state.wishlist?.find((wish) => wish.id === entry.id))
+    if (state.wishlist?.find((wish) => wish._id === entry._id))
       return { ...entry, wishlist: true };
     else return entry;
   });
@@ -69,7 +69,7 @@ const ProductPage = () => {
         <ProductFilter {...productFilterProps} />
         <div className="productsContainer gap">
           {filteredData.map((entry) => {
-            return <ProductCard key={entry.id} data={entry} />;
+            return <ProductCard key={entry._id} data={entry} />;
           })}
         </div>
       </div>

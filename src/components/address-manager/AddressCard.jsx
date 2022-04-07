@@ -20,8 +20,11 @@ export const AddressCard = ({ data, dispatch, setUpdate, currentUpdate }) => {
       </div>
       <p className="address_cardPara">{data.nearby}</p>
       <div className="btn-box">
-        <button onClick={() => deleteHandler(data.id)}>Delete</button>
-        <button onClick={() => updateHandler(data.id)} disabled={currentUpdate}>
+        <button onClick={() => deleteHandler(data._id)}>Delete</button>
+        <button
+          onClick={() => updateHandler(data._id)}
+          disabled={currentUpdate}
+        >
           Update
         </button>
       </div>

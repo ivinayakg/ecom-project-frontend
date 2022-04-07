@@ -26,7 +26,7 @@ export const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     UpdateData(state.userData.token, dispatch);
-  }, [state.userData]);
+  }, [state.userData.isAuth]);
 
   return (
     <UserContext.Provider value={{ state, dispatch }}>

@@ -4,9 +4,11 @@ export const addressReducer = (state, action) => {
     case "add":
       return [...state, payload];
     case "remove":
-      return state.filter((entry) => entry.id !== payload.id);
+      return state.filter((entry) => entry._id !== payload._id);
     case "update":
-      return state.map((entry) => (entry.id === payload.id ? payload : entry));
+      return state.map((entry) =>
+        entry._id === payload._id ? payload : entry
+      );
     default:
       return state;
   }

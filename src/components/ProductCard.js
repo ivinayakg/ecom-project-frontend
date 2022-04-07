@@ -6,7 +6,7 @@ import { notificationHandler } from "./Notification";
 const ProductCard = ({ data, type, clickHandler, button }) => {
   const { dispatch, state } = useUserContext();
   const navigate = useNavigate();
-  const inCart = state.cart.data.find((entry) => entry.id === data.id);
+  const inCart = state.cart.data.find((entry) => entry._id === data._id);
 
   const addToCart = () => {
     if (!inCart) {
@@ -20,7 +20,7 @@ const ProductCard = ({ data, type, clickHandler, button }) => {
   };
 
   const redirectToProductPage = () => {
-    navigate(`/product/${data.id}`, { state: data });
+    navigate(`/product/${data._id}`, { state: data });
   };
 
   return (

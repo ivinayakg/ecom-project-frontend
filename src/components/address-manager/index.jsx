@@ -21,16 +21,16 @@ export const AddressManagement = () => {
       )}
       <div className="address_wrapper">
         {state.userData.address?.map((entry) => {
-          return updateAddress === entry.id ? (
+          return updateAddress === entry._id ? (
             <AddressCardEdit
-              key={entry.id}
+              key={entry._id}
               dispatch={dispatch}
               data={entry}
               setUpdate={setUpdateAddress}
             />
           ) : (
             <AddressCard
-              key={entry.id}
+              key={entry._id}
               data={entry}
               setUpdate={setUpdateAddress}
               dispatch={dispatch}

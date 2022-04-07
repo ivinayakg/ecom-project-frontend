@@ -9,7 +9,7 @@ const SingleProduct = () => {
   const [data, setData] = useState(state);
 
   useEffect(() => {
-    if (!state || state?.id !== productId) {
+    if (!state || state?._id !== productId) {
       GetData(`/products/${productId}`).then((data) => setData(data.product));
     }
   }, [productId, state]);

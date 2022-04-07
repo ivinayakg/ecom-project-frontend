@@ -7,7 +7,7 @@ const CartProduct = ({ data }) => {
   const navigate = useNavigate();
 
   const redirectToProductPage = () => {
-    navigate(`/product/${data.id}`, { state: data });
+    navigate(`/product/${data._id}`, { state: data });
   };
 
   return (
@@ -35,7 +35,7 @@ const CartProduct = ({ data }) => {
             onClick={() =>
               dispatch({
                 for: "cart",
-                payload: { id: data.id, sign: "+" },
+                payload: { id: data._id, sign: "+" },
                 type: "update",
               })
             }
@@ -46,7 +46,7 @@ const CartProduct = ({ data }) => {
             onClick={() =>
               dispatch({
                 for: "cart",
-                payload: { id: data.id, sign: "-" },
+                payload: { id: data._id, sign: "-" },
                 type: "update",
               })
             }
@@ -54,7 +54,7 @@ const CartProduct = ({ data }) => {
         </div>
         <button
           onClick={() =>
-            dispatch({ for: "cart", type: "remove", payload: data.id })
+            dispatch({ for: "cart", type: "remove", payload: data._id })
           }
         >
           Remove From Cart

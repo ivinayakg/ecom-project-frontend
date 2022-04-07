@@ -119,7 +119,7 @@ export const updateAddressItemHandler = function (schema, request) {
     let userAddresses = schema.users.findBy({ _id: userId }).address;
     const { address } = JSON.parse(request.requestBody);
     userAddresses = userAddresses.map((entry) =>
-      entry.id === addressId ? address : entry
+      entry._id === addressId ? address : entry
     );
     this.db.users.update({ _id: userId }, { address: userAddresses });
     return new Response(200, {}, { address: userAddresses });

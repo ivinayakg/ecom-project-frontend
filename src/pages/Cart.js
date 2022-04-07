@@ -24,7 +24,7 @@ const CartPage = () => {
         <div className="cartContainer">
           <div className="cartProductsContainer">
             {state.cart.data.map((entry) => {
-              return <CartProduct data={entry} key={entry.id} />;
+              return <CartProduct data={entry} key={entry._id} />;
             })}
           </div>
           <CartTotal

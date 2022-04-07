@@ -56,7 +56,7 @@ const Home = () => {
           {catergories.map((entry) => {
             return (
               <Card
-                key={entry.id}
+                key={entry._id}
                 {...brandCardProps}
                 data={{
                   title: (
